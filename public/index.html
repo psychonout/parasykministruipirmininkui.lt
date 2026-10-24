@@ -5,40 +5,45 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Parašyk Ministrui Pirmininkui</title>
   <meta name="description" content="Sugeneruokite oficialų kreipimąsi į Lietuvos Respublikos Ministrą Pirmininką ar ministrą.">
+  <script>try { if (localStorage.theme === "dark") document.documentElement.dataset.theme = "dark"; } catch {}</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #f4f2ed;
-      --surface: #ffffff;
-      --paper: #fffdf8;
-      --text: #1c1d1f;
-      --muted: #5d6066;
-      --border: #dcd8cf;
-      --accent: #006a44;
-      --accent-hover: #00553a;
+      color-scheme: light;
+      --bg: #f6f1e8;
+      --surface: #fffcf6;
+      --paper: #fffefa;
+      --field: #ffffff;
+      --text: #2b2621;
+      --muted: #6d655b;
+      --border: #e3dacb;
+      --accent: #2e6a4c;
+      --accent-hover: #24563d;
       --accent-text: #ffffff;
-      --error: #b3261e;
+      --error: #a5321f;
+      --shadow: 0 1px 2px rgb(60 40 20 / .05), 0 10px 30px rgb(60 40 20 / .07);
       --yellow: #fdb913;
       --green: #006a44;
       --red: #c1272d;
-      --sans: "Inter", system-ui, sans-serif;
-      --serif: "Source Serif 4", Georgia, serif;
+      --sans: "Nunito Sans", system-ui, sans-serif;
+      --serif: "Fraunces", Georgia, serif;
     }
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg: #141517;
-        --surface: #1d1f22;
-        --paper: #23252a;
-        --text: #ebeae6;
-        --muted: #a2a5ab;
-        --border: #34373c;
-        --accent: #3fb68a;
-        --accent-hover: #5cc79e;
-        --accent-text: #0d1f17;
-        --error: #f2867f;
-      }
+    :root[data-theme="dark"] {
+      color-scheme: dark;
+      --bg: #1b1916;
+      --surface: #23211d;
+      --paper: #2a2723;
+      --field: #1f1d1a;
+      --text: #ede6da;
+      --muted: #a99f92;
+      --border: #3b3631;
+      --accent: #7fc4a1;
+      --accent-hover: #9ad3b6;
+      --accent-text: #13201a;
+      --error: #f0907f;
+      --shadow: 0 1px 2px rgb(0 0 0 / .2), 0 10px 30px rgb(0 0 0 / .25);
     }
 
     * { box-sizing: border-box; }
@@ -47,45 +52,55 @@
       margin: 0;
       background: var(--bg);
       color: var(--text);
-      font: 16px/1.6 var(--sans);
+      font: 17px/1.65 var(--sans);
+      transition: background .2s, color .2s;
     }
     .flag { display: flex; height: 6px; }
     .flag span { flex: 1; }
     main { max-width: 760px; margin: 0 auto; padding: 48px 16px 64px; }
 
-    header { margin-bottom: 32px; }
+    header { position: relative; margin-bottom: 36px; }
     .eyebrow {
-      margin: 0 0 8px;
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: .08em;
-      text-transform: uppercase;
+      margin: 0 0 6px;
+      font: italic 400 18px/1.4 var(--serif);
       color: var(--accent);
     }
     h1 {
-      margin: 0 0 12px;
-      font: 600 clamp(32px, 6vw, 44px)/1.15 var(--serif);
-      letter-spacing: -.01em;
+      margin: 0 0 14px;
+      font: 600 clamp(34px, 6.5vw, 48px)/1.1 var(--serif);
+      letter-spacing: -.015em;
+    }
+    .theme {
+      position: absolute;
+      top: -8px;
+      right: 0;
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      justify-content: center;
+      font-size: 18px;
+      border-radius: 50%;
     }
     .lead { margin: 0; color: var(--muted); max-width: 56ch; }
 
     .card {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 24px;
+      border-radius: 18px;
+      padding: clamp(20px, 4vw, 32px);
+      box-shadow: var(--shadow);
     }
     label { display: block; font-weight: 600; margin-bottom: 4px; }
     select {
       display: block;
       width: 100%;
       margin-bottom: 20px;
-      padding: 10px 14px;
+      padding: 11px 14px;
       font: inherit;
       color: inherit;
-      background: var(--bg);
+      background: var(--field);
       border: 1px solid var(--border);
-      border-radius: 8px;
+      border-radius: 12px;
     }
     .hint { margin: 0 0 12px; font-size: 14px; color: var(--muted); }
     textarea {
@@ -93,13 +108,15 @@
       width: 100%;
       min-height: 180px;
       resize: vertical;
-      padding: 12px 14px;
+      padding: 14px 16px;
       font: inherit;
+      line-height: 1.6;
       color: inherit;
-      background: var(--bg);
+      background: var(--field);
       border: 1px solid var(--border);
-      border-radius: 8px;
+      border-radius: 12px;
     }
+    textarea::placeholder { color: var(--muted); }
     select:focus-visible, textarea:focus-visible, button:focus-visible {
       outline: 2px solid var(--accent);
       outline-offset: 2px;
@@ -118,12 +135,12 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 10px 20px;
-      font: 500 15px/1.4 var(--sans);
+      padding: 11px 22px;
+      font: 700 15px/1.4 var(--sans);
       color: var(--accent-text);
       background: var(--accent);
       border: 0;
-      border-radius: 8px;
+      border-radius: 999px;
       cursor: pointer;
     }
     button:hover:not(:disabled) { background: var(--accent-hover); }
@@ -157,15 +174,15 @@
       justify-content: space-between;
       margin-bottom: 12px;
     }
-    h2 { margin: 0; font: 600 20px/1.3 var(--serif); }
+    h2 { margin: 0; font: 600 22px/1.3 var(--serif); }
     .letter {
       margin: 0;
       padding: clamp(24px, 6vw, 56px);
       background: var(--paper);
       border: 1px solid var(--border);
-      border-radius: 4px;
-      box-shadow: 0 1px 2px rgb(0 0 0 / .04), 0 8px 24px rgb(0 0 0 / .06);
-      font: 17px/1.7 var(--serif);
+      border-radius: 6px;
+      box-shadow: var(--shadow);
+      font: 17px/1.75 var(--serif);
       white-space: pre-wrap;
       overflow-wrap: anywhere;
     }
@@ -179,7 +196,7 @@
       padding: 12px 16px;
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 8px;
+      border-radius: 14px;
     }
     .send a { color: var(--accent); font-weight: 600; overflow-wrap: anywhere; }
     .note { margin: 12px 0 0; font-size: 14px; color: var(--muted); }
@@ -196,6 +213,7 @@
 
   <main>
     <header>
+      <button id="theme" type="button" class="secondary theme" aria-label="Tamsi tema" aria-pressed="false">☾</button>
       <p class="eyebrow">Oficialus kreipimasis</p>
       <h1>Parašyk <span id="addressee">Ministrui Pirmininkui</span></h1>
       <p class="lead">Aprašykite savo klausimą ar nuomonę savais žodžiais – paruošime tvarkingą oficialų raštą, kurį galėsite peržiūrėti, papildyti ir išsiųsti.</p>
@@ -235,6 +253,20 @@
 
   <script>
     const $ = (id) => document.getElementById(id);
+
+    const syncTheme = () => {
+      const dark = document.documentElement.dataset.theme === "dark";
+      $("theme").textContent = dark ? "☀" : "☾";
+      $("theme").setAttribute("aria-pressed", dark);
+    };
+    syncTheme();
+    $("theme").addEventListener("click", () => {
+      const dark = document.documentElement.dataset.theme !== "dark";
+      if (dark) document.documentElement.dataset.theme = "dark";
+      else delete document.documentElement.dataset.theme;
+      try { localStorage.theme = dark ? "dark" : "light"; } catch {}
+      syncTheme();
+    });
 
     const capitalize = (s) => s[0].toUpperCase() + s.slice(1);
     let ministers = [];
