@@ -1,0 +1,33 @@
+name = "parasykministruipirmininkui"
+main = "src/index.js"
+compatibility_date = "2026-09-01"
+routes = [{ pattern = "parasykministruipirmininkui.lt", custom_domain = true }]
+
+[assets]
+directory = "./public"
+
+[vars]
+OLLAMA_MODEL = "deepseek-v4.1-flash:cloud"
+
+# "m" = ministras, "f" = ministrė. Update when the cabinet changes (lrv.lt/lt/apie-vyriausybe).
+[vars.MINISTER_GENDERS]
+pm = "m"
+aplinkos = "f"
+ekonomikos = "m"
+energetikos = "m"
+finansu = "m"
+krasto_apsaugos = "m"
+kulturos = "m"
+socialines_apsaugos = "f"
+susisiekimo = "m"
+sveikatos_apsaugos = "m"
+svietimo = "f"
+teisingumo = "f"
+uzsienio_reikalu = "m"
+vidaus_reikalu = "m"
+zemes_ukio = "m"
+
+[[ratelimits]]
+name = "LIMITER"
+namespace_id = "1001"
+simple = { limit = 5, period = 60 }
