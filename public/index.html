@@ -55,8 +55,7 @@
       font: 17px/1.65 var(--sans);
       transition: background .2s, color .2s;
     }
-    .flag { display: flex; height: 6px; }
-    .flag span { flex: 1; }
+    .flag { display: block; width: 100%; height: clamp(18px, 4vw, 26px); }
     main { max-width: 760px; margin: 0 auto; padding: 48px 16px 64px; }
 
     header { position: relative; margin-bottom: 36px; }
@@ -208,11 +207,11 @@
   </style>
 </head>
 <body>
-  <div class="flag" aria-hidden="true">
-    <span style="background: var(--yellow)"></span>
-    <span style="background: var(--green)"></span>
-    <span style="background: var(--red)"></span>
-  </div>
+  <svg class="flag" viewBox="0 0 300 26" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 0 H300 V6 C225 14 150 -2 75 6 C50 9 25 9 0 6 Z" fill="var(--yellow)"/>
+    <path d="M0 8 C75 0 150 16 225 8 C250 5 275 5 300 8 V14 C225 22 150 6 75 14 C50 17 25 17 0 14 Z" fill="var(--green)"/>
+    <path d="M0 16 C75 8 150 24 225 16 C250 13 275 13 300 16 V22 H0 Z" fill="var(--red)"/>
+  </svg>
 
   <main>
     <header>
