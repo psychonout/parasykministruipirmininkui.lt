@@ -91,7 +91,7 @@
       box-shadow: var(--shadow);
     }
     label { display: block; font-weight: 600; margin-bottom: 4px; }
-    select {
+    select, input {
       display: block;
       width: 100%;
       margin-bottom: 20px;
@@ -117,7 +117,7 @@
       border-radius: 12px;
     }
     textarea::placeholder { color: var(--muted); }
-    select:focus-visible, textarea:focus-visible, button:focus-visible {
+    select:focus-visible, input:focus-visible, textarea:focus-visible, button:focus-visible {
       outline: 2px solid var(--accent);
       outline-offset: 2px;
     }
@@ -130,6 +130,9 @@
       margin-top: 16px;
     }
     .count { font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; }
+    .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+    .fields input { margin-bottom: 0; }
+    @media (max-width: 540px) { .fields { grid-template-columns: 1fr; } }
 
     button {
       display: inline-flex;
@@ -225,6 +228,15 @@
         <option value="pm">Ministras Pirmininkas</option>
       </select>
 
+      <label>Apie jus <span class="hint" style="display:inline;margin:0">(nebūtina)</span></label>
+      <p class="hint" style="margin-bottom:8px">Šie duomenys lieka jūsų naršyklėje – jie įterpiami tik sugeneruotame rašte.</p>
+      <div class="fields">
+        <div><label for="sender-name">Vardas ir pavardė</label><input id="sender-name" autocomplete="name"></div>
+        <div><label for="sender-email">El. paštas</label><input id="sender-email" type="email" autocomplete="email"></div>
+        <div><label for="sender-town">Gyvenvietė</label><input id="sender-town" autocomplete="address-level2"></div>
+        <div><label for="sender-address">Adresas</label><input id="sender-address" autocomplete="street-address"></div>
+      </div>
+
       <label for="question">Jūsų klausimas ar teiginys</label>
       <p class="hint" id="question-hint">Pvz., kodėl mano gyvenvietėje vis dar nėra viešojo transporto ir ką Vyriausybė planuoja daryti?</p>
       <textarea id="question" maxlength="2000" required aria-describedby="question-hint count"></textarea>
@@ -288,6 +300,20 @@
       $("count").textContent = `${e.target.value.length} / 2000`;
     });
 
+    const fillPlaceholders = (text) => {
+      const v = (id) => $(id).value.trim();
+      // The model is instructed to emit these exact brackets; empty fields keep the bracket.
+      const map = {
+        "[Vardas Pavardė]": v("sender-name"),
+        "[Adresas]": v("sender-address"),
+        "[El. paštas, telefonas]": v("sender-email"),
+        "[El. paštas]": v("sender-email"),
+        "[Vieta]": v("sender-town"),
+        "[Data]": new Date().toLocaleDateString("lt-LT", { dateStyle: "long" }),
+      };
+      return text.replace(/\[Vardas Pavardė\]|\[Adresas\]|\[El\. paštas(?:, telefonas)?\]|\[Vieta\]|\[Data\]/g, (m) => map[m] || m);
+    };
+
     $("form").addEventListener("submit", async (e) => {
       e.preventDefault();
       const btn = $("submit");
@@ -302,7 +328,7 @@
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error);
-        $("result").textContent = data.text;
+        $("result").textContent = fillPlaceholders(data.text);
         const email = selected()?.email ?? "";
         $("email").textContent = email;
         $("email").href = `mailto:${email}`;
