@@ -86,6 +86,9 @@ export default {
       return new Response("Not found", { status: 404 });
     }
 
+    if (!env.LIMITER) {
+      return Response.json({ error: "Paslauga laikinai nepasiekiama." }, { status: 503 });
+    }
     const { success } = await env.LIMITER.limit({ key: request.headers.get("cf-connecting-ip") ?? "" });
     if (!success) {
       return Response.json({ error: "Per daug užklausų. Pabandykite po minutės." }, { status: 429 });
