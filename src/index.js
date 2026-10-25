@@ -91,9 +91,9 @@ export default {
       return Response.json({ error: "Per daug užklausų. Pabandykite po minutės." }, { status: 429 });
     }
 
-    let question, ministerId;
+    let question, ministerId, variant;
     try {
-      ({ question, minister: ministerId = "pm" } = await request.json());
+      ({ question, minister: ministerId = "pm", variant = "?" } = await request.json());
     } catch {}
     if (!Object.hasOwn(MINISTRIES, ministerId)) {
       return Response.json({ error: "Nežinomas adresatas." }, { status: 400 });
@@ -123,6 +123,8 @@ export default {
     }
 
     const data = await upstream.json();
+    // A/B metric: which flag variant the user had. No question text or PII logged.
+    console.log(JSON.stringify({ event: "generate", variant, minister: ministerId }));
     return Response.json({ text: data.message.content });
   },
 };
