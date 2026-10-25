@@ -268,6 +268,7 @@
         <span>Siųskite el. paštu: <a id="email" href=""></a></span>
         <button id="copy-email" type="button" class="secondary">Kopijuoti adresą</button>
       </div>
+      <p class="note" id="subject-note" hidden>Tema: <span id="letter-subject"></span></p>
       <p class="note">Tai juodraštis. Užpildykite laukus laužtiniuose skliaustuose ir patikrinkite faktus prieš siųsdami.</p>
     </section>
 
@@ -341,8 +342,11 @@
         if (!res.ok) throw new Error(data.error);
         $("result").textContent = fillPlaceholders(data.text);
         const email = selected()?.email ?? "";
+        const subj = data.text.match(/^\**\s*PRAŠYMAS DĖL .+$/m)?.[0].replace(/\*/g, "").trim();
         $("email").textContent = email;
-        $("email").href = `mailto:${email}`;
+        $("email").href = `mailto:${email}${subj ? `?subject=${encodeURIComponent(subj)}` : ""}`;
+        $("letter-subject").textContent = subj ?? "";
+        $("subject-note").hidden = !subj;
         $("send").hidden = !email;
         $("output").hidden = false;
         $("output").scrollIntoView({ behavior: "smooth", block: "start" });
